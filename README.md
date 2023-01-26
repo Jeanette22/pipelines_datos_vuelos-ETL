@@ -7,3 +7,9 @@ En tanto el destino de este canal de datos será el respositorio dónde una empr
 
 
 ### Jeanette Mansilla
+
+
+
+![team](https://user-images.githubusercontent.com/80054717/214891479-54d24002-bb7b-4606-919f-adbc7bf479c2.png)
+
+
