@@ -10,6 +10,4 @@ En tanto el destino de este canal de datos será el respositorio dónde una empr
 
 
 
-![team](https://user-images.githubusercontent.com/80054717/214891479-54d24002-bb7b-4606-919f-adbc7bf479c2.png)
-
-
+![team](https://user-images.githubusercontent.com/80054717/214897231-43bbd445-204c-44ff-ba77-53eb726facc1.png)
