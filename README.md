@@ -27,4 +27,15 @@ Este proceso se lleva adelante desde una consola y después se almacena en un si
 Para realizar esto utilicé Hadoop almacenado en un Docker, desde allí coloqué los comandos wget -P + especificamos ruta donde queremos dejarlo + la url donde está alojado el dataset. Como puede verse en la siguiente imagen:
 ![1](https://user-images.githubusercontent.com/80054717/214900093-df2bc34a-df37-4a14-9f99-79cdc40ca6fd.png)
 
+__________________________________________________________________________________________________________________________________________________________________
 
+HDFS (Hadoop Distributed File System) es el principal componente del ecosistema Hadoop. 
+Se utiliza para almacenar datasets grandes con tipos de datos estructurados, semi-estructurados y no estructurados como imágenes, vídeo, datos de sensores, etc. Está optimizado para almacenar enormes cantidades de datos y mantener varias copias para garantizar una alta disponibilidad y la tolerancia a fallos. 
+En definitiva es una tecnología fundamental para Big Data, o dicho de otra forma:
+Entonces:
+-  HDFS divide los ficheros de datos en bloques, generalmente de 128MB de tamaño, estos bloques son replicados y distribuidos en los nodos que componen el clúster.
+
+
+![5 hdfs ingest](https://user-images.githubusercontent.com/80054717/215556835-54f04b9d-362a-48e4-9c1f-41988bbf502b.png)
+![4 hdfs](https://user-images.githubusercontent.com/80054717/215556846-ac123572-64b9-49f0-b033-2e2a4898a19d.png)
+![6 hdfs ingest](https://user-images.githubusercontent.com/80054717/215556850-396eb98c-b6cd-4a37-871e-496f6687cc9c.png)
