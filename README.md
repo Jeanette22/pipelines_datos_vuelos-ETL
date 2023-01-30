@@ -56,6 +56,7 @@ De esta manera se ingestaron los datos
 
 
 ![8 spark - transformacion aeropuertos](https://user-images.githubusercontent.com/80054717/215560411-e9e80055-a6f9-4bc5-902a-59f55f8300ee.png)
+
 ![7 spark - transformacion vuelos](https://user-images.githubusercontent.com/80054717/215560418-5e67dedd-b746-430e-a0fd-2951a06baaa4.png)
 
 
@@ -90,6 +91,8 @@ ________________________________________________________________________________
 ### Consultas SQL en Dbeaver: 
 Durante esta etapa realicé consultas sobre los dataset para crear los informes según lo solicitado: 
 ![dbeaver](https://user-images.githubusercontent.com/80054717/215584666-e54a208d-ed0c-4498-8d3a-beca609d1545.png)
+
+
 ![joins](https://user-images.githubusercontent.com/80054717/215584882-29fe8cfd-3ebc-4cc9-b50d-3782d42ef477.png)
 
 
