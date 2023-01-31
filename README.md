@@ -19,7 +19,8 @@ Tecnologias utilizadas:
 
 
 
-![team](https://user-images.githubusercontent.com/80054717/214897543-1e3e4d26-128d-4f2d-9d6e-c0f54c2e1120.png)
+<p align="center" width="100%">
+    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/214897543-1e3e4d26-128d-4f2d-9d6e-c0f54c2e1120.png">
 
 
 
@@ -30,7 +31,8 @@ Este proceso se lleva adelante desde una consola y después se almacena en un si
 
 
 Para realizar esto utilicé Hadoop almacenado en un Docker, desde allí coloqué los comandos wget -P + especificamos ruta donde queremos dejarlo + la url donde está alojado el dataset. Como puede verse en la siguiente imagen:
-![1](https://user-images.githubusercontent.com/80054717/214900093-df2bc34a-df37-4a14-9f99-79cdc40ca6fd.png)
+
+![1](https://user-images.githubusercontent.com/80054717/215776416-0def5478-b762-4feb-b831-4633bd504021.png)
 
 __________________________________________________________________________________________________________________________________________________________________
 
@@ -40,10 +42,14 @@ En definitiva es una tecnología fundamental para Big Data, o dicho de otra form
 Entonces:
 -  HDFS divide los ficheros de datos en bloques, generalmente de 128MB de tamaño, estos bloques son replicados y distribuidos en los nodos que componen el clúster.
 
+<p align="center" width="100%">
+    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215556835-54f04b9d-362a-48e4-9c1f-41988bbf502b.png">
+<p align="center" width="100%">
+    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215556846-ac123572-64b9-49f0-b033-2e2a4898a19d.png">
+<p align="center" width="100%">
+    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215556850-396eb98c-b6cd-4a37-871e-496f6687cc9c.png">
 
-![5 hdfs ingest](https://user-images.githubusercontent.com/80054717/215556835-54f04b9d-362a-48e4-9c1f-41988bbf502b.png)
-![4 hdfs](https://user-images.githubusercontent.com/80054717/215556846-ac123572-64b9-49f0-b033-2e2a4898a19d.png)
-![6 hdfs ingest](https://user-images.githubusercontent.com/80054717/215556850-396eb98c-b6cd-4a37-871e-496f6687cc9c.png)
+
 
 __________________________________________________________________________________________________________________________________________________________________
 
@@ -95,10 +101,10 @@ ________________________________________________________________________________
 ____________________________________________________________________________________________________________________________________________________________________
 ### Consultas SQL en Dbeaver: 
 Durante esta etapa realicé consultas sobre los dataset para crear los informes según lo solicitado: 
-![dbeaver](https://user-images.githubusercontent.com/80054717/215584666-e54a208d-ed0c-4498-8d3a-beca609d1545.png)
-
-
-![joins](https://user-images.githubusercontent.com/80054717/215584882-29fe8cfd-3ebc-4cc9-b50d-3782d42ef477.png)
+<p align="center" width="100%">
+    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215584666-e54a208d-ed0c-4498-8d3a-beca609d1545.png">
+<p align="center" width="100%">
+    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215584882-29fe8cfd-3ebc-4cc9-b50d-3782d42ef477.png">
 
 
 
