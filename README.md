@@ -106,11 +106,14 @@ ________________________________________________________________________________
 
 ____________________________________________________________________________________________________________________________________________________________________
 ### Consultas SQL en Dbeaver: 
-Durante esta etapa realicé consultas sobre los dataset para crear los informes según lo solicitado: 
-<p align="center" width="100%">
-    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215584666-e54a208d-ed0c-4498-8d3a-beca609d1545.png">
-<p align="center" width="100%">
-    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/215584882-29fe8cfd-3ebc-4cc9-b50d-3782d42ef477.png">
+Durante esta etapa realicé consultas usando "Dbeaver" sobre los dataset para crear los informes según lo solicitado: 
+- Cantidad de vuelos entre las fechas 01/12/2021 y 31/01/2022. Mostrar consulta y Resultado de la query
+- Cantidad de pasajeros que viajaron en Aerolíneas Argentinas entre el 01/01/2021 y 30/06/2022. Mostrar consulta y Resultado de la query
+- Mostrar fecha, hora, código aeropuerto salida, ciudad de salida, código de aeropuerto de arribo, ciudad de arribo, y cantidad de pasajeros de cada vuelo, entre el 01/01/2022 y el 30/06/2022 ordenados por fecha de manera descendiente. Mostrar consulta y Resultado de la query
+- Cuales son las 10 aerolíneas que más pasajeros llevaron entre el 01/01/2021 y el 30/06/2022 exceptuando aquellas aerolíneas que no tengan nombre. Mostrar consulta y Visualización
+- Cuales son las 10 aeronaves más utilizadas entre el 01/01/2021 y el 30/06/22 que despegaron desde la Ciudad autónoma de Buenos Aires o de Buenos Aires, exceptuando aquellas aeronaves que no cuentan con nombre. Mostrar consulta y Visualización
+- Conclusiones - recomendaciones
+
 
 
 
