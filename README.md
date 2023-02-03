@@ -102,8 +102,7 @@ Buenas prácticas:
 - evitar tildes en los nombres de tablas/columnas
 - reemplazar espacios por guión bajo: el símbolo “_”
 
-Entonces, en esta etapa me pareció importante crear una base de datos exclusiva, donde solo irían los dataset relacionadas a los vuelos del Ministerio de Transporte
-utilicé los comandos: 
+Entonces, en esta etapa me pareció importante crear una base de datos exclusiva, donde solo irían los dataset relacionadas a los vuelos del Ministerio de Transporte. Para esto utilicé los comandos: 
 - CREATE SCHEMA vuelos_argentina;
 - USE vuelos_argentina;
 Luego genere las tablas que se ven en la imagen, especificando nombre de las columnas, tipos de datos, y estructura:
