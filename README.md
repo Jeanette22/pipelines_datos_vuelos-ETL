@@ -1,4 +1,4 @@
-#                                                 Creando Data Pipeline:
+#                                                 Creando Pipeline de datos:
 Proceso de ETL: proceso de ingesta, transformación y carga de data al DataWarehouse.
 
 #### Data Pipeles: es un canal de datos donde se usan diferentes tecnologias para procesar y transformar "datos crudos"  desde su origen hacia su destino. Asimismo las fuentes pueden ser tanto internas como externas, en el primer caso  puede ser: b/d transaccional de MongoDB o PostgreSQL, una app de negocios en la nube como Salesforce, Shopify o MailChimp. En el segundo caso es decir "externa", están: Nielsen o Qualtrics. 
