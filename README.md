@@ -134,22 +134,8 @@ Durante esta etapa realicé consultas usando "Dbeaver" sobre los dataset para cr
 - Mostrar fecha, hora, código aeropuerto salida, ciudad de salida, código de aeropuerto de arribo, ciudad de arribo, y cantidad de pasajeros de cada vuelo, entre el 01/01/2022 y el 30/06/2022 ordenados por fecha de manera descendiente. Mostrar consulta y Resultado de la query
 - Cuales son las 10 aerolíneas que más pasajeros llevaron entre el 01/01/2021 y el 30/06/2022 exceptuando aquellas aerolíneas que no tengan nombre. Mostrar consulta y Visualización
 - Cuales son las 10 aeronaves más utilizadas entre el 01/01/2021 y el 30/06/22 que despegaron desde la Ciudad autónoma de Buenos Aires o de Buenos Aires, exceptuando aquellas aeronaves que no cuentan con nombre. Mostrar consulta y Visualización
-- Conclusiones - recomendaciones
-
-
-
-
-
-
-
-
-
 
 ____________________________________________________________________________________________________________________________________________________________________
-### Graficos - Tableau: Visualización de Data
-![Dashboar tableau](https://user-images.githubusercontent.com/80054717/215585244-3ef77c00-8079-45c5-8b02-e72288b3a28e.png)
-
-
     
 ## Conclusiones del informe :
 ### - Cantidad de vuelos entre las fechas 01/12/2021 y 31/01/2022: 56.163
