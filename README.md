@@ -86,7 +86,7 @@ De esta manera se ingestaron los datos
 
 
 __________________________________________________________________________________________________________________________________________________________________
-#### Automatización: AIRFLOW
+### Automatización: AIRFLOW
 En esta etapa se utilizo los script para automatizar todo el proceso de transformacion del dataset, a traves de un DAG, como puede verse en la imagen:
 
 ![dag](https://user-images.githubusercontent.com/80054717/215563619-99660f22-bca6-4867-91be-702a7399356d.png)
