@@ -150,4 +150,18 @@ ________________________________________________________________________________
 ![Dashboar tableau](https://user-images.githubusercontent.com/80054717/215585244-3ef77c00-8079-45c5-8b02-e72288b3a28e.png)
 
 
-
+    
+## Conclusiones del informe :
+### - Cantidad de vuelos entre las fechas 01/12/2021 y 31/01/2022: 56.163
+### - Cantidad de pasajeros que viajaron en Aerolíneas Argentinas entre el 01/01/2021 y 30/06/2022: AEROLINEAS ARGENTINAS 7.262.042
+### - las 10 aerolíneas que más pasajeros llevaron entre el 01/01/2021 y el 30/06/2022 exceptuando aquellas aerolíneas que no tengan nombre:
+    a) Aerolineas Argentina: 7.262.042
+    b) JetSmart Airlines: 1.466.020
+    c) FB lineas aéras FLYBONDY: 1.436.491 ... *Etc
+### - 10 Aeronaves más utilizadas entre el 01/01/2021 y el 30/06/22 que despegaron desde la Ciudad autónoma de Buenos Aires o de Buenos Aires, exceptuando aquellas aeronaves que no cuentan con nombre:
+    a) CE-150-L
+    b) CE-152
+    c) CE-150-M ... *etc
+ Para agregar, estudiar la experiencia del usuario para analizar y mejorar esto. Serían datos relevantes tanto para el sector de marketing, servicio como experiencia de usuario. 
+    También podría generar alguna proyección sobre presupuestos
+    
