@@ -71,7 +71,7 @@ De esta manera se ingestaron los datos
 
 ![7 spark - transformacion vuelos](https://user-images.githubusercontent.com/80054717/215560418-5e67dedd-b746-430e-a0fd-2951a06baaa4.png)
 
-ESPECIFICACIONES: 
+#### ESPECIFICACIONES: 
 - .option("delimiter",";") *utilicé esto para separar las columnas y ver mejor el contenido
 - informe_2021.createOrReplaceTempView("info2021")  *con esta sintaxis en spark se pueden crear vistas temporales del DataFrame/Dataset que me permiten ejercutar/consultar en SQL
 - df_union = spark.sql("select * from info2021 UNION select * from info2022")
@@ -116,6 +116,8 @@ Entonces, en esta etapa me pareció importante crear una base de datos exclusiva
 - CREATE SCHEMA vuelos_argentina;
 - USE vuelos_argentina;
 Luego genere las tablas que se ven en la imagen, especificando nombre de las columnas, tipos de datos, y estructura:
+    
+    
 ![creado tablas HIVE](https://user-images.githubusercontent.com/80054717/216650855-029f5d2a-b93c-43b5-be0b-3f5dcaf976fb.png)
 ______________________________________________________________________________________________________________________________
 ![tablas cargadas HIVE](https://user-images.githubusercontent.com/80054717/215584196-2b66ee93-ee39-43e3-8da5-9e880e389292.png)
