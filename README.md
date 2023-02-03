@@ -164,4 +164,12 @@ ________________________________________________________________________________
     c) CE-150-M ... *etc
  Para agregar, estudiar la experiencia del usuario para analizar y mejorar esto. Serían datos relevantes tanto para el sector de marketing, servicio como experiencia de usuario. 
     También podría generar alguna proyección sobre presupuestos
-    
+
+__________________________________________________________________________________________________________________________________________________________________
+#### DASHBOARD:
+TABLEAU:
+- https://public.tableau.com/app/profile/jeanettecrd/viz/MinisteriodeTransporte-Vuelos2021-2022/Dashboard1
+
+DEEPNOTE:
+- https://deepnote.com/workspace/jeanette-mansilla22crd-63c0520f-11c5-4cfb-8954-72e145bb64e1/project/Ministerio-de-Transporte-vuelos-aeropuertos-77e97841-83b8-4421-98eb-4892caab8e33/notebook/Vuelos%202021-2022%20Argentina-8b8608e79aba42b382b5ab507a4b7e81
+
