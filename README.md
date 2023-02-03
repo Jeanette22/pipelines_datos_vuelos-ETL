@@ -72,14 +72,14 @@ De esta manera se ingestaron los datos
 ![7 spark - transformacion vuelos](https://user-images.githubusercontent.com/80054717/215560418-5e67dedd-b746-430e-a0fd-2951a06baaa4.png)
 
 ESPECIFICACIONES: 
-    - .option("delimiter",";") *utilicé esto para separar las columnas y ver mejor el contenido
-    - informe_2021.createOrReplaceTempView("info2021")  *con esta sintaxis en spark se pueden crear vistas temporales del DataFrame/Dataset que me permiten ejercutar/consultar en SQL
-    - df_union = spark.sql("select * from info2021 UNION select * from info2022")
-    - df_union.createOrReplaceTempView("dfunion") *en estos dos pasos utilicé sintaxtis con SQL para generar un join con la otra tabla, luego cree la vista temporal
-    - .withColumnRenamed *Lo utilicé para cambiar el nombre de las columnas que necesitaba, si bien deben existir otros métodos por mi parte decidí hacerlo de esa manera 
-    - .drop *con esta función elimine la columna que no iba a usar
-    - cast(coalesce(Pasajeros, 0) as integer)as pasajeros *en este caso pase de un tipo de dato string a integer, y utilicé 'coalesce' para que los valores nulos pasen a '0' y le coloqué el mismo nombre al campo pero con minúsculas
-    - spark.sql("insert into vuelos_argentina.aero_detall select * from aeropuertoss") * en este paso inserto la tabla que estaba transformando a la tabla que había creado previamente en HIVE. Como puede verse se coloca el nombre de la base de datos + nombre de la tabla, y la vista de la tabla que tiene el contenido de datos que voy a sumar.
+- .option("delimiter",";") *utilicé esto para separar las columnas y ver mejor el contenido
+- informe_2021.createOrReplaceTempView("info2021")  *con esta sintaxis en spark se pueden crear vistas temporales del DataFrame/Dataset que me permiten ejercutar/consultar en SQL
+- df_union = spark.sql("select * from info2021 UNION select * from info2022")
+- df_union.createOrReplaceTempView("dfunion") *en estos dos pasos utilicé sintaxtis con SQL para generar un join con la otra tabla, luego cree la vista temporal
+- .withColumnRenamed *Lo utilicé para cambiar el nombre de las columnas que necesitaba, si bien deben existir otros métodos por mi parte decidí hacerlo de esa manera 
+- .drop *con esta función elimine la columna que no iba a usar
+- cast(coalesce(Pasajeros, 0) as integer)as pasajeros *en este caso pase de un tipo de dato string a integer, y utilicé 'coalesce' para que los valores nulos pasen a '0' y le coloqué el mismo nombre al campo pero con minúsculas
+- spark.sql("insert into vuelos_argentina.aero_detall select * from aeropuertoss") * en este paso inserto la tabla que estaba transformando a la tabla que había creado previamente en HIVE. Como puede verse se coloca el nombre de la base de datos + nombre de la tabla, y la vista de la tabla que tiene el contenido de datos que voy a sumar.
 
 
 
