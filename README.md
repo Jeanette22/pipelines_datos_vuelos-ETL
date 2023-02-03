@@ -8,11 +8,11 @@ En tanto el destino de este canal de datos será el respositorio dónde una empr
 
 ## Jeanette Mansilla
 ___________________________________________________________________________________________________________________________________________________________________
-Tecnologias utilizadas: 
-- Spark
-- Hive
-- Dbeaver
-- SQL
+### Tecnologias utilizadas: 
+#### - Spark
+#### - Hive
+#### - Dbeaver
+#### - SQL
 
 
 
