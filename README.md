@@ -92,7 +92,23 @@ ________________________________________________________________________________
 
 
 ____________________________________________________________________________________________________________________________________________________________________
-### Tablas cargadas en HIVE:
+### Tablas creadas y cargadas en HIVE: 
+Modelización de una base de datos
+Antes de comenzar a filtrar y/o seleccionar data para cargar y crear bases de datos es necesario tener en cuenta las buenas prácticas para modelizar las tablas.
+Es decir saber de antemano el nombre de las tablas, su estructura (tipo de dato) y las relaciones que van a tener. Entonces para eso lo más usado es el "Diagrama de Entidad - Relación" o "DER". Por ende su caracteristica destacada es que puede representar las tablas de manera gráfica y sus relaciones vinculadas. 
+
+Buenas prácticas:
+- nombres en minuscula 
+- evitar tildes en los nombres de tablas/columnas
+- reemplazar espacios por guión bajo: el símbolo “_”
+
+Entonces, en esta etapa me pareció importante crear una base de datos exclusiva, donde solo irían los dataset relacionadas a los vuelos del Ministerio de Transporte
+utilicé los comandos: 
+- CREATE SCHEMA vuelos_argentina;
+- USE vuelos_argentina;
+Luego genere las tablas que se ven en la imagen, especificando nombre de las columnas, tipos de datos, y estructura:
+![creado tablas HIVE](https://user-images.githubusercontent.com/80054717/216650855-029f5d2a-b93c-43b5-be0b-3f5dcaf976fb.png)
+______________________________________________________________________________________________________________________________
 ![tablas cargadas HIVE](https://user-images.githubusercontent.com/80054717/215584196-2b66ee93-ee39-43e3-8da5-9e880e389292.png)
 
 
