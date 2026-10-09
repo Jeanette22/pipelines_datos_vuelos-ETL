@@ -1,0 +1,26 @@
+# Secretos y configuración local
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Spark / Hive locales
+metastore_db/
+derby.log
+spark-warehouse/
+
+# Datos descargados (no se versionan)
+data/
+landing/
+*.csv
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store

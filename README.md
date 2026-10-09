@@ -1,161 +1,269 @@
-#                                                Creando Pipeline de datos - Proceso de ETL (extracción - transformación y carga de datos al DataWarehouse):
-Proceso de ETL: proceso de ingesta, transformación y carga de data al DataWarehouse.
+# ✈️ Pipeline ETL de Vuelos Domésticos de Argentina
 
-#### Data Pipeles: es un canal de datos donde se usan diferentes tecnologias para procesar y transformar "datos crudos"  desde su origen hacia su destino. Asimismo las fuentes pueden ser tanto internas como externas, en el primer caso  puede ser: b/d transaccional de MongoDB o PostgreSQL, una app de negocios en la nube como Salesforce, Shopify o MailChimp. En el segundo caso es decir "externa", están: Nielsen o Qualtrics. 
+[![CI](https://github.com/Jeanette22/pipelines_datos_vuelos-ETL/actions/workflows/ci.yml/badge.svg)](https://github.com/Jeanette22/pipelines_datos_vuelos-ETL/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/Apache%20Spark-3.2%2B-E25A1C?logo=apachespark&logoColor=white)
+![Apache Hive](https://img.shields.io/badge/Apache%20Hive-FDEE21?logo=apachehive&logoColor=black)
+![Hadoop HDFS](https://img.shields.io/badge/Hadoop-HDFS-66CCFF?logo=apachehadoop&logoColor=black)
+![Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?logo=apacheairflow&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Estado](https://img.shields.io/badge/estado-activo-brightgreen)
+![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-En tanto el destino de este canal de datos será el respositorio dónde una empresa almacena para usarla de forma conjunta: estos pueden ser los almacenes de datos "DATAWAREHOUSE"  y los lagos de datos "Data Lakes". Por última a la hora de realizar la transformación  de la data ésta puede ser a través de Spark, Trifacta, dbt, o si es manual usando Python para hacer los scripts, Airflow, etc. En definitiva, después de todos estos pasos es posible generar Visualizaciones de los resultados o analisis esperados, para esto podemos usar Tableau, Google Data Studio, Power BI, etc.
+Pipeline de datos **batch** que ingiere los informes de vuelos 2021–2022 del Ministerio de Transporte de Argentina, los transforma con **Spark**, los carga en un Data Warehouse en **Hive** y se orquesta con **Airflow**. Sobre esas tablas se resuelven consultas de negocio en SQL (DBeaver) y se publican dashboards.
 
+---
 
-## Jeanette Mansilla
-___________________________________________________________________________________________________________________________________________________________________
-### Tecnologias utilizadas: 
-#### - Spark
-#### - Hive
-#### - Dbeaver
-#### - SQL
+## Tabla de contenidos
 
+1. [Descripción técnica](#-descripción-técnica)
+2. [Arquitectura](#-arquitectura)
+3. [Estructura del repositorio](#-estructura-del-repositorio)
+4. [Puesta en marcha](#-puesta-en-marcha)
+5. [Tests](#-tests)
+6. [Consultas y resultados](#-consultas-y-resultados)
+7. [Cómo contribuir](#-cómo-contribuir)
+8. [Autora](#-autora)
 
+---
 
+## 📌 Descripción técnica
 
+**Propósito.** Dejar datos de vuelos limpios, tipados y consultables con SQL para responder preguntas de negocio (volumen de vuelos, pasajeros por aerolínea, aeronaves más usadas, rutas).
 
+**Origen de datos.** Archivos CSV (separador `;`) de [Datos Abiertos – Ministerio de Transporte](https://datos.gob.ar/), alojados en un bucket de Amazon S3:
 
-<p align="center" width="100%">
-    <img width="33%" src= "https://user-images.githubusercontent.com/80054717/214897543-1e3e4d26-128d-4f2d-9d6e-c0f54c2e1120.png">
+| Archivo | Contenido |
+|---|---|
+| `2021-informe-ministerio.csv` | Vuelos 2021 |
+| `202206-informe-ministerio.csv` | Vuelos 2022 (hasta junio) |
+| `aeropuertos_detalle.csv` | Catálogo de aeropuertos (código, ciudad, provincia, tráfico, etc.) |
 
-### ETL (Extract, Transform and Load)
-Durante el desarrollo de todo el proyecto se aplica el proceso ETC (extración, transformación y carga) de data al DataWarehouse. En este caso se utilizaron archivos CSV's, con dataset ubicados en datos abiertos del Ministerio de Transporte. 
-En el proceso de transformación se normalizó y limpio los dataset: eliminando columnas que no iba a utilizar, eliminando datos nulos, cambio de nombre de las columnas, el tipo de dato, y también se unieron ambos datasets para que sea solo una tabla a consultar.
-Para cargar la data se usó SQL, HIVE y AIRFLOW. Este último automatiza el proceso mediante la creación de un Dag, con scripts. 
+**Transformaciones (Spark / PySpark).**
 
-#### Ingesta de datos: Durante esta etapa se obtiene datos desde diferentes fuentes que luego al ser transformada será información para la organización determinada. De manera que todo esto se agrega al proyecto en el que estás trabajando. Como se mencionó al principio estos datos pueden ser de otras B/D, archivos almacenados o apps. Asimismo puede provenir de manera interna cuando es desde la misma empresa, o externa.
+| Dataset | Transformación |
+|---|---|
+| Vuelos | Unión de los informes 2021 y 2022 sin duplicados |
+| Vuelos | Normalización de encabezados a `snake_case` sin tildes (`Hora UTC` → `hora_utc`) |
+| Vuelos | `fecha` de texto `dd/MM/yyyy` a tipo `date` |
+| Vuelos | Filtro de **vuelos domésticos** entre `2021-01-01` y `2022-06-30` |
+| Vuelos | `pasajeros` a `int`, con nulos reemplazados por `0` |
+| Aeropuertos | Se descartan las columnas `fir` e `inhab`; `local` → `aeropuerto`, `oaci` → `oac` |
+| Aeropuertos | `elev` y `distancia_ref` a `float` (nulos de distancia → `0`) |
+| Aeropuertos | Filtro de tráfico **Nacional** |
 
-En el siguiente caso de ejemplo obtenemos los datos que están almacenados en un Cloud Provider: Amazon S3. Allí están cargados los CSV. Asimismo otras opciones que podrían presentarse es cuando están almacenados en Cloud Storage de Google Cloud o Blog Storage de Azure.  
-Este proceso se lleva adelante desde una consola y después se almacena en un sistema de archivos HDFS- Hadoop (*REPOSITORIO DE DATA), tambien pude ser en un repositorio de algún Cloud Provider, Cloud Storage, Blog Storage. 
-    
+**Destino.** Base Hive `vuelos_argentina` con dos tablas externas:
 
-Para realizar esto utilicé Hadoop almacenado en un Docker, desde allí coloqué los comandos wget -P + especificamos ruta donde queremos dejarlo + la url donde está alojado el dataset. Como puede verse en la siguiente imagen:
+- `tabla_aero` — vuelos (`fecha`, `hora_utc`, `clase_de_vuelo`, `clasificacion_de_vuelo`, `tipo_de_movimiento`, `aeropuerto`, `origen_destino`, `aerolinea_nombre`, `aeronave`, `pasajeros`)
+- `aero_detall` — aeropuertos (21 columnas, ver [`sql/01_create_tables.hql`](sql/01_create_tables.hql))
 
-![1](https://user-images.githubusercontent.com/80054717/215776416-0def5478-b762-4feb-b831-4633bd504021.png)
+**Orquestación.** Un DAG de Airflow (`Ministerio-de-Transporte-Vuelos`) ejecuta diariamente: ingesta → transformación de vuelos → transformación de aeropuertos → fin.
 
-__________________________________________________________________________________________________________________________________________________________________
+**Idempotencia.** La ingesta pisa los archivos (`wget -O`, `hdfs dfs -put -f`) y la carga usa `overwrite`, por lo que re-ejecutar el DAG no duplica datos.
 
-### HDFS (Hadoop Distributed File System) es el principal componente del ecosistema Hadoop. 
-Se utiliza para almacenar datasets grandes con tipos de datos estructurados, semi-estructurados y no estructurados como imágenes, vídeo, datos de sensores, etc. Está optimizado para almacenar enormes cantidades de datos y mantener varias copias para garantizar una alta disponibilidad y la tolerancia a fallos. 
-En definitiva es una tecnología fundamental para Big Data, o dicho de otra forma:
-Entonces:
--  HDFS divide los ficheros de datos en bloques, generalmente de 128MB de tamaño, estos bloques son replicados y distribuidos en los nodos que componen el clúster.
+---
 
-![4 hdfs](https://user-images.githubusercontent.com/80054717/215846349-7f784e20-95d6-4def-8f2b-35bb34b6f566.png)
-![5 hdfs ingest](https://user-images.githubusercontent.com/80054717/215846383-832c2be7-c489-4f43-8638-9607346dae2a.png)
-![6 hdfs ingest](https://user-images.githubusercontent.com/80054717/215846445-eaf927c5-5fa9-4c79-8a64-6ebd7527ab88.png)
+## 🏗️ Arquitectura
 
+```mermaid
+flowchart LR
+    S3[("☁️ Amazon S3<br/>CSV Ministerio de Transporte")]
+    LAND["📁 Landing local<br/>/home/hadoop/landing"]
+    HDFS[("🗄️ HDFS<br/>/ingest")]
+    SPARK["⚡ Spark (PySpark)<br/>limpieza · unión · tipado"]
+    HIVE[("🐝 Hive DWH<br/>vuelos_argentina")]
+    SQL["🔎 DBeaver<br/>consultas SQL"]
+    BI["📊 Tableau / Deepnote<br/>dashboards"]
 
+    S3 -- "wget" --> LAND
+    LAND -- "hdfs dfs -put" --> HDFS
+    HDFS -- "spark.read.csv" --> SPARK
+    SPARK -- "insertInto" --> HIVE
+    HIVE --> SQL --> BI
 
+    AF{{"🌀 Airflow DAG<br/>Ministerio-de-Transporte-Vuelos"}}
+    AF -. "ingest_data" .-> LAND
+    AF -. "transform_*" .-> SPARK
+```
 
-__________________________________________________________________________________________________________________________________________________________________
+**Flujo del DAG:**
 
-### Transformación de los DataSets
-En esta etapa realice las transformaciones de los dataset para posteriormente hacer las consultas con los filtros ya realizados:
-- Lectura de los datasets
-- union de los datasets
-- creacion de vistas
-- Utilice withColumn para cambiar nombres de algunas columnas
-- Despues con lenguaje SQL, realicé el filtro de los datos, cambie el tipo de dato, y cambié nulos por '0'
-- Inserción de la data a las tablas creadas en HIVE
+```mermaid
+flowchart LR
+    A[ingest_data] --> B[transform_vuelos] --> C[transform_aeropuertos] --> D[fin_proceso]
+```
 
-Durante las transformaciones se filtraron los datos por vuelos domésticos, se eliminaron la columna inhab y fir. 
-De esta manera se ingestaron los datos
+> Las tareas de transformación corren en secuencia a propósito: con el metastore Derby embebido de Hive, dos `spark-submit` simultáneos se bloquean entre sí.
 
+<details>
+<summary>📸 Capturas del proyecto original (evidencia de ejecución)</summary>
 
-![8 spark - transformacion aeropuertos](https://user-images.githubusercontent.com/80054717/215560411-e9e80055-a6f9-4bc5-902a-59f55f8300ee.png)
+| Etapa | Captura |
+|---|---|
+| Descarga de datasets | ![wget](docs/images/01-ingesta-wget.png) |
+| Archivos en HDFS | ![hdfs](docs/images/04-hdfs-ls.png) |
+| Transformación de vuelos | ![spark vuelos](docs/images/07-spark-transformacion-vuelos.png) |
+| Transformación de aeropuertos | ![spark aeropuertos](docs/images/08-spark-transformacion-aeropuertos.png) |
+| DAG en Airflow | ![dag](docs/images/10-dag-airflow.png) |
+| Ejecución en Airflow | ![airflow](docs/images/09-airflow-ejecucion.png) |
+| Tablas en Hive | ![hive](docs/images/11-hive-tablas.png) |
+| Consulta con JOIN en DBeaver | ![join](docs/images/12-consulta-join-dbeaver.png) |
 
-![7 spark - transformacion vuelos](https://user-images.githubusercontent.com/80054717/215560418-5e67dedd-b746-430e-a0fd-2951a06baaa4.png)
+</details>
 
-#### ESPECIFICACIONES: 
-- .option("delimiter",";") *utilicé esto para separar las columnas y ver mejor el contenido
-- informe_2021.createOrReplaceTempView("info2021")  *con esta sintaxis en spark se pueden crear vistas temporales del DataFrame/Dataset que me permiten ejercutar/consultar en SQL
-- df_union = spark.sql("select * from info2021 UNION select * from info2022")
-- df_union.createOrReplaceTempView("dfunion") *en estos dos pasos utilicé sintaxtis con SQL para generar un join con la otra tabla, luego cree la vista temporal
-- .withColumnRenamed *Lo utilicé para cambiar el nombre de las columnas que necesitaba, si bien deben existir otros métodos por mi parte decidí hacerlo de esa manera 
-- .drop *con esta función elimine la columna que no iba a usar
-- cast(coalesce(Pasajeros, 0) as integer)as pasajeros *en este caso pase de un tipo de dato string a integer, y utilicé 'coalesce' para que los valores nulos pasen a '0' y le coloqué el mismo nombre al campo pero con minúsculas
-- spark.sql("insert into vuelos_argentina.aero_detall select * from aeropuertoss") * en este paso inserto la tabla que estaba transformando a la tabla que había creado previamente en HIVE. Como puede verse se coloca el nombre de la base de datos + nombre de la tabla, y la vista de la tabla que tiene el contenido de datos que voy a sumar.
+---
 
+## 📂 Estructura del repositorio
 
+```
+pipelines_datos_vuelos-ETL/
+├── README.md
+├── LICENSE
+├── .env.example               # plantilla de configuración (copiar a .env)
+├── .gitignore
+├── requirements.txt           # dependencias de ejecución
+├── requirements-dev.txt       # + pytest y ruff
+├── pyproject.toml
+├── .github/workflows/ci.yml   # lint + tests en cada push/PR
+├── dags/
+│   └── ministerio_transporte_vuelos.py   # DAG de Airflow
+├── scripts/
+│   ├── ingest.sh              # S3 -> landing -> HDFS
+│   ├── transform_vuelos.py    # entrypoint spark-submit (vuelos)
+│   └── transform_aeropuertos.py          # entrypoint spark-submit (aeropuertos)
+├── src/vuelos_etl/
+│   ├── config.py              # configuración por variables de entorno
+│   ├── spark_session.py       # SparkSession con soporte Hive
+│   ├── transformations.py     # funciones puras DataFrame -> DataFrame
+│   └── pipelines.py           # lectura HDFS + escritura Hive
+├── sql/
+│   ├── 01_create_tables.hql   # DDL de las tablas Hive
+│   └── 02_consultas.sql       # consultas de análisis
+├── tests/                     # pytest con Spark local
+└── docs/images/               # capturas de la ejecución original
+```
 
+---
 
+## 🚀 Puesta en marcha
 
-__________________________________________________________________________________________________________________________________________________________________
-### Automatización: AIRFLOW
-En esta etapa se utilizo los script para automatizar todo el proceso de transformacion del dataset, a traves de un DAG, como puede verse en la imagen:
+### Requisitos
 
-![dag](https://user-images.githubusercontent.com/80054717/215563619-99660f22-bca6-4867-91be-702a7399356d.png)
+- Un entorno con **Hadoop (HDFS)**, **Spark 3.2+**, **Hive** y **Airflow 2.4+**. En el proyecto original se usó un contenedor **Docker** con todo el stack.
+- Python 3.8+ y Java 8/11/17 (para PySpark).
 
+### 1. Clonar e instalar
 
-__________________________________________________________________________________________________________________________________________________________________
-### Resultados: En esta imagen podemos notar la automatización realizada, siguiendo el proceso por si surge algún problema podemos chequearlo en "Log":
-![airflow](https://user-images.githubusercontent.com/80054717/215583634-197efa87-ba95-4706-b1aa-48f72419467a.png)
+```bash
+git clone https://github.com/Jeanette22/pipelines_datos_vuelos-ETL.git
+cd pipelines_datos_vuelos-ETL
 
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
+### 2. Configurar variables de entorno
 
+```bash
+cp .env.example .env
+# Editá .env: HDFS_NAMENODE, rutas, etc.
+```
 
+> `.env` está en `.gitignore`: no subas credenciales ni IPs al repositorio.
 
+### 3. Crear las tablas en Hive (una sola vez)
 
-____________________________________________________________________________________________________________________________________________________________________
-### Tablas creadas y cargadas en HIVE: 
-Modelización de una base de datos
-Antes de comenzar a filtrar y/o seleccionar data para cargar y crear bases de datos es necesario tener en cuenta las buenas prácticas para modelizar las tablas.
-Es decir saber de antemano el nombre de las tablas, su estructura (tipo de dato) y las relaciones que van a tener. Entonces para eso lo más usado es el "Diagrama de Entidad - Relación" o "DER". Por ende su caracteristica destacada es que puede representar las tablas de manera gráfica y sus relaciones vinculadas. 
+```bash
+hive -f sql/01_create_tables.hql
+```
 
-Buenas prácticas:
-- nombres en minuscula 
-- evitar tildes en los nombres de tablas/columnas
-- reemplazar espacios por guión bajo: el símbolo “_”
+### 4. Ejecutar el pipeline manualmente
 
-Entonces, en esta etapa me pareció importante crear una base de datos exclusiva, donde solo irían los dataset relacionadas a los vuelos del Ministerio de Transporte. Para esto utilicé los comandos: 
-- CREATE SCHEMA vuelos_argentina;
-- USE vuelos_argentina;
-Luego genere las tablas que se ven en la imagen, especificando nombre de las columnas, tipos de datos, y estructura:
-    
-    
-![creado tablas HIVE](https://user-images.githubusercontent.com/80054717/216650855-029f5d2a-b93c-43b5-be0b-3f5dcaf976fb.png)
-______________________________________________________________________________________________________________________________
-![tablas cargadas HIVE](https://user-images.githubusercontent.com/80054717/215584196-2b66ee93-ee39-43e3-8da5-9e880e389292.png)
+```bash
+# Ingesta: S3 -> landing -> HDFS
+bash scripts/ingest.sh
 
+# Transformación y carga en Hive
+spark-submit --files "$HIVE_CONF_DIR/hive-site.xml" scripts/transform_vuelos.py
+spark-submit --files "$HIVE_CONF_DIR/hive-site.xml" scripts/transform_aeropuertos.py
+```
 
+Verificá la carga:
 
+```sql
+SELECT COUNT(*) FROM vuelos_argentina.tabla_aero;
+SELECT COUNT(*) FROM vuelos_argentina.aero_detall;
+```
 
+### 5. Ejecutar con Airflow (automatizado)
 
-____________________________________________________________________________________________________________________________________________________________________
-### Consultas SQL en Dbeaver: 
-Durante esta etapa realicé consultas usando "Dbeaver" sobre los dataset para crear los informes según lo solicitado: 
-- Cantidad de vuelos entre las fechas 01/12/2021 y 31/01/2022. Mostrar consulta y Resultado de la query
-- Cantidad de pasajeros que viajaron en Aerolíneas Argentinas entre el 01/01/2021 y 30/06/2022. Mostrar consulta y Resultado de la query
-- Mostrar fecha, hora, código aeropuerto salida, ciudad de salida, código de aeropuerto de arribo, ciudad de arribo, y cantidad de pasajeros de cada vuelo, entre el 01/01/2022 y el 30/06/2022 ordenados por fecha de manera descendiente. Mostrar consulta y Resultado de la query
-- Cuales son las 10 aerolíneas que más pasajeros llevaron entre el 01/01/2021 y el 30/06/2022 exceptuando aquellas aerolíneas que no tengan nombre. Mostrar consulta y Visualización
-- Cuales son las 10 aeronaves más utilizadas entre el 01/01/2021 y el 30/06/22 que despegaron desde la Ciudad autónoma de Buenos Aires o de Buenos Aires, exceptuando aquellas aeronaves que no cuentan con nombre. Mostrar consulta y Visualización
+```bash
+cp dags/ministerio_transporte_vuelos.py "$AIRFLOW_HOME/dags/"
+# Definí en el entorno del scheduler: ETL_REPO_DIR, SPARK_SUBMIT_BIN, HIVE_SITE_XML
+# (y SPARK_SSH_TARGET si Spark está en otro nodo). Ver .env.example
+airflow dags unpause Ministerio-de-Transporte-Vuelos
+airflow dags trigger Ministerio-de-Transporte-Vuelos
+```
 
-____________________________________________________________________________________________________________________________________________________________________
-    
-## Conclusiones del informe :
-### - Cantidad de vuelos entre las fechas 01/12/2021 y 31/01/2022: 56.163
-### - Cantidad de pasajeros que viajaron en Aerolíneas Argentinas entre el 01/01/2021 y 30/06/2022: AEROLINEAS ARGENTINAS 7.262.042
-### - las 10 aerolíneas que más pasajeros llevaron entre el 01/01/2021 y el 30/06/2022 exceptuando aquellas aerolíneas que no tengan nombre:
-    a) Aerolineas Argentina: 7.262.042
-    b) JetSmart Airlines: 1.466.020
-    c) FB lineas aéras FLYBONDY: 1.436.491 ... *Etc
-### - 10 Aeronaves más utilizadas entre el 01/01/2021 y el 30/06/22 que despegaron desde la Ciudad autónoma de Buenos Aires o de Buenos Aires, exceptuando aquellas aeronaves que no cuentan con nombre:
-    a) CE-150-L
-    b) CE-152
-    c) CE-150-M ... *etc
- Para agregar, estudiar la experiencia del usuario para analizar y mejorar esto. Serían datos relevantes tanto para el sector de marketing, servicio como experiencia de usuario. 
-    También podría generar alguna proyección sobre presupuestos
+---
 
-__________________________________________________________________________________________________________________________________________________________________
-#### DASHBOARD:
-TABLEAU:
-- https://public.tableau.com/app/profile/jeanettecrd/viz/MinisteriodeTransporte-Vuelos2021-2022/Dashboard1
+## 🧪 Tests
 
-DEEPNOTE:
-- https://deepnote.com/workspace/jeanette-mansilla22crd-63c0520f-11c5-4cfb-8954-72e145bb64e1/project/Ministerio-de-Transporte-vuelos-aeropuertos-77e97841-83b8-4421-98eb-4892caab8e33/notebook/Vuelos%202021-2022%20Argentina-8b8608e79aba42b382b5ab507a4b7e81
+Las transformaciones están separadas de la E/S, así que se prueban con Spark local y datos de ejemplo:
 
+```bash
+pip install -r requirements-dev.txt
+ruff check src scripts tests
+pytest -v
+```
+
+---
+
+## 📈 Consultas y resultados
+
+Las consultas están en [`sql/02_consultas.sql`](sql/02_consultas.sql). Resultados del informe original (2021 – junio 2022):
+
+| Pregunta | Resultado |
+|---|---|
+| Vuelos entre 01/12/2021 y 31/01/2022 | **56.163** |
+| Pasajeros de Aerolíneas Argentinas (01/01/2021 – 30/06/2022) | **7.262.042** |
+| Top aerolíneas por pasajeros | 1. Aerolíneas Argentinas (7.262.042) · 2. JetSmart (1.466.020) · 3. Flybondi (1.436.491) |
+| Aeronaves más usadas desde Buenos Aires / CABA | CE-150-L · CE-152 · CE-150-M … |
+
+**Dashboards:** [Tableau](https://public.tableau.com/app/profile/jeanettecrd/viz/MinisteriodeTransporte-Vuelos2021-2022/Dashboard1) · [Deepnote](https://deepnote.com/workspace/jeanette-mansilla22crd-63c0520f-11c5-4cfb-8954-72e145bb64e1/project/Ministerio-de-Transporte-vuelos-aeropuertos-77e97841-83b8-4421-98eb-4892caab8e33/notebook/Vuelos%202021-2022%20Argentina-8b8608e79aba42b382b5ab507a4b7e81)
+
+**Ideas de análisis futuro:** experiencia de usuario, marketing y servicio al cliente, proyecciones de presupuesto.
+
+---
+
+## 🤝 Cómo contribuir
+
+¡Las contribuciones son bienvenidas! Este proyecto nació como guía de aprendizaje, así que sugerencias y correcciones suman mucho.
+
+1. **Hacé un fork** del repositorio (botón *Fork* arriba a la derecha).
+2. **Cloná tu fork** y creá una rama descriptiva:
+   ```bash
+   git clone https://github.com/<tu-usuario>/pipelines_datos_vuelos-ETL.git
+   cd pipelines_datos_vuelos-ETL
+   git checkout -b feat/mi-mejora
+   ```
+3. **Instalá las dependencias de desarrollo** y asegurate de que todo pase:
+   ```bash
+   pip install -r requirements-dev.txt
+   ruff check src scripts tests && pytest
+   ```
+4. **Hacé commits pequeños y claros** (ej.: `feat: agrega validación de nulos en aeropuertos`).
+5. **Subí tu rama** y abrí un **Pull Request** hacia `main`, explicando qué cambia y por qué.
+6. Si encontrás un error o tenés una idea, abrí un **Issue** antes de empezar.
+
+**Ideas para colaborar:** `docker-compose` para levantar el stack completo, validaciones de calidad de datos, formato Parquet, más tests, tablero actualizado.
+
+---
+
+## 👩‍💻 Autora
+
+**Jeanette Mansilla** — [Portfolio](https://jeanettemansilla.netlify.app/) · [LinkedIn](https://www.linkedin.com/in/jeanettemansilla/) · [Tableau Public](https://public.tableau.com/app/profile/jeanettecrd/vizzes)
+
+Distribuido bajo licencia MIT. Ver [`LICENSE`](LICENSE).
